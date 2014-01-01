@@ -1,0 +1,79 @@
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}"
+    xml:lang="{% firstof LANGUAGE_CODE 'en' %}"
+    lang="{% firstof LANGUAGE_CODE 'en' %}">
+  <head>
+    <title>{% block title %}{% endblock %} - Blog Of Fred</title>
+    <link rel="stylesheet" href="/static/blog/stylesheets/main.css">
+    <!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+    {% block css %}
+    {% endblock %}
+
+    {% block preload_js %}
+    {% endblock %}
+
+    {% block extra-head %}{% endblock %}
+  </head>
+
+  <body>
+    <div class="main-body">
+  {% block header %}
+  <header>
+      <img id="lazy" />
+  </header>
+  {% endblock %}
+<div class="container">
+    <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+    {% block content %}
+    {% endblock %}
+    </div>
+    <div class="col-md-3 right-menu">
+    {% block right-menu %}
+    {% endblock %}
+    </div>
+    </div>
+</div>
+
+  </div>
+
+    {% block footer %}
+    <footer class="footer">
+      Contact me <a href="http://twitter.com/fredkingham">@fredkingham</a>
+        - image courtesy of <a href="http://commons.wikimedia.org/wiki/File:Arthur_Rothstein,_Night_view,_downtown_Dallas,_Texas,_1942.jpg">wikipedia</a>
+    </footer>
+    {% endblock %}
+
+    {% block js %}
+    <script>
+        function lazyLoad(src, medium_src, mini_src){
+            var update = function(){
+                    var width = $("body").width();
+                    var pic = width > 1000 ? src : width > 400 ? medium_src : mini_src;
+                    $("img#lazy").load(function() {
+                        $(this).addClass("revealed");
+                    }).attr('src', pic);
+            }
+
+            $(window).load(function(){
+                    update();
+            });
+
+            $(window).resize(function () {
+                    update();
+            });
+        }
+        lazyLoad("/static/blog/images/main-street-large.jpg", "/static/blog/images/main-street-medium.jpg", "/static/blog/images/main-street-small.jpg");
+    </script>
+    {% endblock %}
+  </body>
+</html>
+
+

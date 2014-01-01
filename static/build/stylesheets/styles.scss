@@ -1,0 +1,112 @@
+@import "bootstrap/bootstrap";
+@import "compass/css3/opacity";
+@import "compass/css3/transition";
+
+
+header{
+   overflow: hidden; 
+   position: relative; 
+   height: 450px;
+   background-color: $gray-dark;
+
+    @media all and (max-width: $screen-sm){
+        height: 200px;
+    }
+}
+
+
+#title-container{
+    position: absolute; 
+    top: 200px; 
+    width: 100%; 
+    text-align: center;
+    @media all and (max-width: $screen-sm){
+        top: 100px; 
+    }
+    z-index: 10;
+
+}
+
+#title{
+    display: inline;
+    color: #3cf; 
+    border: 4px solid #3cf; 
+    padding: 20px;
+    font-size: $font-size-h1;
+    
+
+    @media all and (max-width: $screen-sm){
+        font-size: $font-size-h3;
+        padding: 10px;
+    }
+}
+
+img#lazy{
+    @include opacity(0);
+    @include transition-property(opacity);
+    @include transition-duration(0.2s);
+    @include transition-timing-function(ease); 
+    max-width: 100%;
+}
+
+img#lazy.revealed{
+    @include opacity(0.5);
+}
+
+a.understated{
+        color: inherit;
+}
+
+a.understated:hover{
+        color: $link-hover-color;
+}
+
+.sub-header{
+    font-family: serif;
+}
+
+html, body{
+    height: 100%;
+}
+
+.main-body{
+    padding-bottom: $navbar-height;
+    margin-bottom: $navbar-height * -1;
+    min-height: 100%;
+
+    @media all and (max-width: $screen-sm){
+        padding-bottom: $navbar-height * 2;
+        margin-bottom: $navbar-height * -2;
+    }
+}
+
+.footer{
+    background-color: $gray-dark;
+    display: block;
+    color: $gray-light;
+    padding: 15px;
+    width: 100%;
+    height: $navbar-height;
+    text-align: right;
+    padding-right: $grid-gutter-width;
+    margin-top: $navbar-height;
+
+    & a{
+        color: $gray-lighter;
+    }
+
+    @media all and (max-width: $screen-sm){
+        height: $navbar-height * 2;
+    }
+}
+
+.top-margin{
+    margin-top: 22px;   
+}
+
+.right-menu{
+    text-align: right; 
+    margin-top: 22px;   
+    font-style: italic;
+    color: $gray;
+}

@@ -1,0 +1,148 @@
+<!DOCTYPE PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>  
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.0.0.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link href='//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
+
+<title>fun game</title>
+<style>
+td:hover, td.selected{
+    background-color: #AAA;
+    cursor: pointer;
+}
+
+td.processed{
+    background-color: rgb(51, 51, 51);;
+}
+
+.error td.selected{
+    background-color: red;
+}
+</style>
+
+
+</head>
+<body>
+<h1>Hello there</h1>
+<table class="table table-bordered" data-bind="css: {error: error}">
+<tbody data-bind="chunkedArray: elements, chunkSize: 10">
+<tr data-bind="foreach: $data">
+<td data-bind="text: $data.number, css: {selected: selected, processed: processed}, click: addSelected"></td>
+</tr>
+</tbody>
+</table>
+<div><h4>Score <span data-bind="text: score"></span></h4></div>
+<a data-bind="click: process" class="btn">Process</a>
+<div>
+<div data-bind="text: currentTime"></div>
+
+
+
+<script>
+
+
+/*
+var endTime = new Date().getTime() + 12000;
+var getTime = _.throttle(function(){ currentTime(endTime - new Date().getTime()); console.log("counting") }, 1000);
+var currentTime = ko.observable();
+getTime();
+
+var getTime = function(){
+    if(currentTime()){
+        clearInterval(timer);
+    }
+    else{
+        currentTime
+    }
+}
+
+
+var timer = setInterval()
+
+while(currentTime()){
+    getTime();
+}
+
+*/
+
+
+ko.bindingHandlers.chunkedArray = {
+        init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext){
+             var value = ko.utils.unwrapObservable(valueAccessor());
+             var chunkSize = allBindingsAccessor.chunkSize;
+             var i,j,temparray;
+             var result = []
+             for (i=0,j=value.length; i<j; i+=chunkSize) {
+                  result.push(value.slice(i,i+chunkSize));
+             }
+
+
+             return ko.bindingHandlers.foreach.init(element, function(){ return result; }, allBindingsAccessor, viewModel, bindingContext);
+
+        },
+        update: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext){
+             var value = ko.utils.unwrapObservable(valueAccessor());
+             var chunkSize = allBindingsAccessor.chunkSize || 10;
+             var i,j,temparray,chunk = 10;
+             var result = []
+             for (i=0,j=value.length; i<j; i+=chunkSize) {
+                  result.push(value.slice(i,i+chunkSize));
+             }
+
+
+             return ko.bindingHandlers.foreach.update(element, function(){ return result }, allBindingsAccessor, viewModel, bindingContext);
+        }
+}
+
+var Element = function(number, index){
+    this.index = index, this.number = number;
+    this.selected = ko.observable(false);
+    this.error = ko.observable(false);
+    this.processed = ko.observable(false);
+    this.multiplyer = 1;
+}
+
+
+var chunkSize = 10;
+var error = ko.observable(false);
+var numbers =   _.chain(_.range(1, 151))
+                .map(function(x){ return (x % 20     + 1)})
+                .shuffle()
+                .value();
+var elements = _.map(numbers, function(x, i){ return new Element(x, i ); });
+var addSelected = function(x){ 
+    if(!x.processed()){ 
+            x.selected(!x.selected());
+            error(false);
+    } 
+};
+
+var score = ko.observable(0);
+var calculated = ko.observableArray([])
+var process = function(){
+        var selectedElements = _.filter(elements, function(x){ return x.selected() });
+        var unique = _.uniq(selectedElements, "number");
+        if(unique.length > 1){
+            error(true);
+        }
+        else{
+            score(score() + selectedElements.length);
+            _.each(selectedElements, function(x){
+                x.selected(false);
+                x.processed(true);
+            });
+        }
+}
+
+
+modelPageView = {elements: elements}
+
+ko.applyBindings(modelPageView);
+
+</script>
+
+</body>
+</html>

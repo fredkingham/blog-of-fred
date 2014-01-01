@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %} All Posts {% endblock title %}
+
+{% block header %}
+<header class="front-page">
+    <div id="title-container">
+    <div id="title">The Blog Of Fred</div>
+    </div>
+    <img id="lazy" />
+</header>
+{% endblock header %}
+
+    {% block content %}
+    {% for blog in object_list %}
+    <div class="row">
+    <div style="text-align: center" class="col-md-12">
+    <h1><a href="{% url blog_detail slug=blog.slug %}">{{ blog.title }}</a></h1>
+    <h3 class="sub-header">{{ blog.tease }}</h3>
+    </div>
+    </div>
+    <div class="row">
+    <div style="text-align: right;"  class="col-md-12">
+    {{ blog.publish|date:"j/g/Y" }}
+    </div>
+    </div>
+    {% endfor %}
+    {% endblock content %}
+
+    {% block right-menu %}
+
+    {% if user.is_authenticated %}
+    <div><a href="{% url blog_create %}">add a post</a></div>
+    <div><a href="{% url auth_logout %}">log out</a></div>
+    {% else %}
+    <a href="{% url auth_login %}">log in</a>
+    <a href="{% url registration_register %}">sign up</a>
+    {% endif %}
+    {% endblock %}
+
+

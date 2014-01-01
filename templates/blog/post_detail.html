@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load markup %}
+{% block title %}{{ object.title }} {% endblock title %}
+
+
+
+{% block content %}
+<article>
+<h1>{{ object.title }}</h1>
+<h3 class="sub-header">{{ object.tease }}</h3>
+<div style="text-align: left">
+{{ object.text|markdown:"safe" }}
+</div>
+<div style="text-align: right;">
+{{ object.publish|date:"j/g/Y" }}
+</div>
+</article>
+
+{% include 'return_to_posts.html' %}
+{% endblock content %}
+
+{% block right-menu %}
+{% if object.creator == user or user.is_superuser %}
+    <div><a href="{% url blog_update object.slug %}">edit</a></div>
+    <div><a href="{% url blog_delete object.slug %}">delete</a></div>
+{% endif %}
+{% endblock %}
